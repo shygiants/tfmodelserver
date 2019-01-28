@@ -16,7 +16,7 @@ setup(
           'tensorflow==1.11.0'
       ]
     },
-    version='1.0.0',
+    version='1.0.1',
     description='Libraries for easy bootstrapping TensorFlow server',
     author='Sanghoon Yoon',
     author_email='shygiants@gmail.com',

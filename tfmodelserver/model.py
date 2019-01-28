@@ -43,7 +43,8 @@ class Model:
         tf.logging.debug('Starting Session...')
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = False
-        self._sess = tf.Session(config=config)
+        graph = tf.Graph()
+        self._sess = tf.Session(config=config, graph=graph)
 
         # Load a SavedModel
         tf.logging.debug('Loading SavedModel...')
@@ -61,7 +62,7 @@ class Model:
         outputs = default_signature.outputs
 
         def get_tensor_from_tensor_info(tensor_info_dict):
-            return dict_map(lambda k, v: (k, tf.saved_model.utils.get_tensor_from_tensor_info(v)), tensor_info_dict)
+            return dict_map(lambda k, v: (k, tf.saved_model.utils.get_tensor_from_tensor_info(v, graph=graph)), tensor_info_dict)
 
         self._inputs = get_tensor_from_tensor_info(inputs)
         self._outputs = get_tensor_from_tensor_info(outputs)
