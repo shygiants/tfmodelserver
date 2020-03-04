@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 import requests
 
-from tensorflow.logging import debug, error, fatal, info, warn
+from absl.logging import debug, error, fatal, info, warn
 
 
 def imdecode(b):

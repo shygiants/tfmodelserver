@@ -6,6 +6,7 @@ from __future__ import print_function
 import os
 
 import tensorflow as tf
+from absl import logging
 
 from tfmodelserver.utils import dict_map, dict_filter
 
@@ -40,20 +41,20 @@ class Model:
         return self._model_dir
 
     def load(self):
-        tf.logging.debug('Starting Session...')
+        logging.debug('Starting Session...')
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = False
         graph = tf.Graph()
         self._sess = tf.Session(config=config, graph=graph)
 
         # Load a SavedModel
-        tf.logging.debug('Loading SavedModel...')
+        logging.debug('Loading SavedModel...')
         meta_graph_def = tf.saved_model.loader.load(self._sess, [tf.saved_model.tag_constants.SERVING], self.model_dir)
 
         # Get default SignatureDef
         default_signature = meta_graph_def.signature_def[
             tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY]
-        tf.logging.info('SignatureDef: {}'.format(default_signature))
+        logging.info('SignatureDef: {}'.format(default_signature))
 
         # Get input placeholders from SignatureDef
         inputs = default_signature.inputs

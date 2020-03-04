@@ -7,7 +7,7 @@ import json
 import uuid
 import datetime
 
-from tensorflow.logging import debug, error, fatal, info, warn
+from absl.logging import debug, error, fatal, info, warn
 import pytz
 from flask import Flask, request, jsonify, abort
 from flask_cors import CORS

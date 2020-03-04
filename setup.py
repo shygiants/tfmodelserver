@@ -10,13 +10,14 @@ setup(
         'numpy',
         'requests',
         'pytz',
+        'absl-py'
     ],
     extras_require={
       'dev': [
           'tensorflow==1.11.0'
       ]
     },
-    version='1.0.1',
+    version='1.0.3.dev0',
     description='Libraries for easy bootstrapping TensorFlow server',
     author='Sanghoon Yoon',
     author_email='shygiants@gmail.com',
