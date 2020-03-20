@@ -4,16 +4,16 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-import cv2
+from PIL import Image
+from io import BytesIO
 import requests
 
 from absl.logging import debug, error, fatal, info, warn
 
 
 def imdecode(b):
-    decoded = cv2.imdecode(np.asarray(bytearray(b), dtype=np.uint8), cv2.IMREAD_COLOR)
-
-    return None if decoded is None else decoded[:, :, ::-1]
+    img = Image.open(BytesIO(b))
+    return np.asarray(img)[..., :3]
 
 
 class BaseResolver:

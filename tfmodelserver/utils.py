@@ -6,8 +6,8 @@ from __future__ import print_function
 import base64
 
 import numpy as np
-import cv2
-
+from io import BytesIO
+from PIL import Image
 
 def dict_map(fn: callable, d: dict) -> dict:
     return dict(map(lambda t: fn(*t), d.items()))
@@ -19,7 +19,9 @@ def dict_filter(fn: callable, d: dict) -> dict:
 
 def b64encode(img) -> str:
     if isinstance(img, np.ndarray):
-        img = cv2.imencode('.jpg', img[:, :, ::-1])[1].tostring()
+        buffered = BytesIO()
+        Image.fromarray(img).save(buffered, format="JPEG")
+        img = base64.b64encode(buffered.getvalue())
     elif not isinstance(img, (bytes, str)):
         raise ValueError('`img` should be an instance of either `np.ndarray` or `bytes`')
 

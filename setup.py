@@ -6,18 +6,18 @@ setup(
     install_requires=[
         'Flask',
         'flask-cors',
-        'opencv-python',
         'numpy',
         'requests',
         'pytz',
-        'absl-py'
+        'absl-py',
+        'Pillow',
     ],
     extras_require={
       'dev': [
           'tensorflow==1.11.0'
       ]
     },
-    version='1.0.3.dev0',
+    version='1.0.3',
     description='Libraries for easy bootstrapping TensorFlow server',
     author='Sanghoon Yoon',
     author_email='shygiants@gmail.com',
