@@ -162,5 +162,5 @@ class Server:
             return res
 
         info('Starting server...')
-        self.app.run(host=self.host, port=self.port)
+        self.app.run(host=self.host, port=self.port, threaded=False)
         info('Server Stopped')
