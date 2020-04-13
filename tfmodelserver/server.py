@@ -73,13 +73,15 @@ class Server:
         def decorator(f):
             def wrapped_f(*args, **kwargs):
                 with request.timer.start('total'):
+                    files = request.files
+                    form = request.form
+
                     def mapper(resolver):
-                        files = request.files
-                        form = request.form
                         return resolver.name, resolver(files=files, form=form)
 
                     try:
-                        kwargs.update(map(mapper, resolvers))
+                        with request.timer.start('form'):
+                            kwargs.update(map(mapper, resolvers))
                     except (KeyError, ValueError) as e:
                         return abort(400, e)
 
