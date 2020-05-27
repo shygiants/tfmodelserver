@@ -11,8 +11,12 @@ import requests
 from absl.logging import debug, error, fatal, info, warn
 
 
-def imdecode(b):
-    img = Image.open(BytesIO(b))
+def imdecode(b, target_shape=None):
+    img = Image.open(BytesIO(b)).convert('RGB')
+
+    if target_shape is not None:
+        img = img.resize(target_shape)
+
     return np.asarray(img)[..., :3]
 
 
@@ -49,16 +53,22 @@ class FileResolver(BaseResolver):
 
 
 class ImageFileResolver(FileResolver):
-    def __init__(self, name: str, required=False):
+    def __init__(self, name: str, required=False, target_shape=None):
         FileResolver.__init__(self, name, required=required)
+
+        self._target_shape = target_shape
+
+    @property
+    def target_shape(self):
+        return self._target_shape
 
     def __call__(self, files, **kwargs):
         b = FileResolver.__call__(self, files, **kwargs)
 
         if b is None:
-            return None, None
+            return None
 
-        decoded = imdecode(b)
+        decoded = imdecode(b, target_shape=self.target_shape)
 
         if decoded is None:
             raise ValueError('Invalid data on `{}`'.format(self.name))
@@ -98,16 +108,22 @@ class URLResolver(FormResolver):
 
 
 class ImageURLResolver(URLResolver):
-    def __init__(self, name: str, required=False):
+    def __init__(self, name: str, required=False, target_shape=None):
         URLResolver.__init__(self, name, required=required)
+
+        self._target_shape = target_shape
+
+    @property
+    def target_shape(self):
+        return self._target_shape
 
     def __call__(self, form, **kwargs):
         b = URLResolver.__call__(self, form, **kwargs)
 
         if b is None:
-            return None, None
+            return None
 
-        decoded = imdecode(b)
+        decoded = imdecode(b, target_shape=self.target_shape)
 
         if decoded is None:
             raise ValueError('Invalid data on `{}`'.format(self.name))
