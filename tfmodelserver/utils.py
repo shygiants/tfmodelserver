@@ -8,6 +8,7 @@ import base64
 import numpy as np
 from io import BytesIO
 from PIL import Image
+import cv2
 
 def dict_map(fn: callable, d: dict) -> dict:
     return dict(map(lambda t: fn(*t), d.items()))
@@ -19,9 +20,7 @@ def dict_filter(fn: callable, d: dict) -> dict:
 
 def b64encode(img) -> str:
     if isinstance(img, np.ndarray):
-        buffered = BytesIO()
-        Image.fromarray(img).save(buffered, format="JPEG")
-        img = base64.b64encode(buffered.getvalue())
+        img = cv2.imencode('.jpg', img[:, :, ::-1])[1].tostring()
     elif not isinstance(img, (bytes, str)):
         raise ValueError('`img` should be an instance of either `np.ndarray` or `bytes`')
 
